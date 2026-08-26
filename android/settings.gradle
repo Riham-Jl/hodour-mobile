@@ -1,0 +1,50 @@
+pluginManagement {
+    def flutterSdkPath = {
+        def properties = new Properties()
+        file("local.properties").withInputStream { properties.load(it) }
+        def flutterSdkPath = properties.getProperty("flutter.sdk")
+        assert flutterSdkPath != null : "flutter.sdk not set in local.properties"
+        return flutterSdkPath
+    }()
+
+    includeBuild("$flutterSdkPath/packages/flutter_tools/gradle")
+
+    repositories {
+        mavenLocal()
+        maven { url uri("$rootDir/local-m2") }   // ← مستودعك المحلي لقطع الإنترنت
+        google()
+        mavenCentral()
+        gradlePluginPortal()
+    }
+
+    resolutionStrategy {
+        eachPlugin {
+            if (requested.id.id == "com.android.application" ||
+                    requested.id.id == "com.android.library") {
+                useModule("com.android.tools.build:gradle:8.5.2")
+            }
+        }
+    }
+}
+
+// إعلان الإضافات وإجبار نسخة الـ AGP هنا أيضاً لضمان التطابق
+plugins {
+    id "dev.flutter.flutter-plugin-loader" version "1.0.0"
+    id "com.android.application" version "8.5.2" apply false    // ← كان 8.2.1
+    id "org.jetbrains.kotlin.android" version "1.8.22" apply false
+    id "com.google.gms.google-services" version "4.4.0" apply false
+    id "com.google.firebase.crashlytics" version "2.9.9" apply false
+}
+
+// جعل حل الاعتمادات يفضّل مستودعات المشروع وإضافة local-m2 على مستوى المشروع كله
+dependencyResolutionManagement {
+    repositoriesMode.set(RepositoriesMode.PREFER_PROJECT)
+    repositories {
+        mavenLocal()
+        maven { url uri("$rootDir/local-m2") }   // ← محلي أولاً
+        google()
+        mavenCentral()
+    }
+}
+
+include ":app"
