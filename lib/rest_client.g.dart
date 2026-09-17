@@ -10,7 +10,7 @@ part of 'rest_client.dart';
 
 class _RestClient implements RestClient {
   _RestClient(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= 'http://127.0.0.1:8000/api';
+    baseUrl ??= 'https://hodour.sparkybee.tech/api';
   }
 
   final Dio _dio;
