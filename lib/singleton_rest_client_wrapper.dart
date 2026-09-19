@@ -20,10 +20,9 @@ class SingletonRestClient {
     dio.options.headers["Accept"] = "application/json";
     // providing app version and platform in headers
 
-      dio.options.headers["App-Version"] = "1.0.1";
-          //AppState.appVersion;
+      dio.options.headers["App-Version"] = AppState.appVersion;
 
-   dio.options.headers["App-Platform"] = "android";
+   dio.options.headers["App-Platform"] = AppState.appPlatform;
    dio.interceptors.add(HeaderInterceptor());
     dio.interceptors.add(LogInterceptor(
         request: true, requestBody: true, responseBody: true, error: true));
